@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" id="Definitions_0fr9mxs" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.22.0">
+  <bpmn:process id="MainDepositCreditProcess" name="MainDepositCreditProcess" isExecutable="true" camunda:historyTimeToLive="180">
+    <bpmn:startEvent id="StartEvent_1" name="MainDepositCreditStartEvent">
+      <bpmn:outgoing>Flow_1d027ry</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="EndEvent_0x6ir2l">
+      <bpmn:incoming>Flow_0h4yrfo</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="GoingToBankId" name="Going to the bank" camunda:formKey="camunda-forms:/form/way-to-get-to-the-bank.form">
+      <bpmn:incoming>Flow_1d027ry</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ayts2e</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1ayts2e" sourceRef="GoingToBankId" targetRef="Gateway_1ocns3p" />
+    <bpmn:serviceTask id="PayForTheTaxi" name="Pay for the taxi" camunda:delegateExpression="${taxiPaymentDelegate}">
+      <bpmn:incoming>Flow_0tzdc8o</bpmn:incoming>
+      <bpmn:outgoing>Flow_00n31xm</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1d027ry" sourceRef="StartEvent_1" targetRef="GoingToBankId" />
+    <bpmn:exclusiveGateway id="Gateway_1ocns3p" name="Taxi or Walk ?">
+      <bpmn:incoming>Flow_1ayts2e</bpmn:incoming>
+      <bpmn:outgoing>Flow_0tzdc8o</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1uonpq7</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0tzdc8o" name="Taxi" sourceRef="Gateway_1ocns3p" targetRef="PayForTheTaxi">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${transportMode == 'taxi'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1uonpq7" name="Walk" sourceRef="Gateway_1ocns3p" targetRef="GetTicketInQueueMachineId">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${transportMode == 'walk'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_00n31xm" sourceRef="PayForTheTaxi" targetRef="GetTicketInQueueMachineId" />
+    <bpmn:userTask id="GetTicketInQueueMachineId" name="GetTicketInQueueMachine" camunda:formKey="camunda-forms:/form/queue-machine.form">
+      <bpmn:incoming>Flow_1uonpq7</bpmn:incoming>
+      <bpmn:incoming>Flow_00n31xm</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ax5l73</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_1rqsgao" name="Deposit or Credit">
+      <bpmn:incoming>Flow_1ax5l73</bpmn:incoming>
+      <bpmn:outgoing>Flow_1imyjzs</bpmn:outgoing>
+      <bpmn:outgoing>Flow_13dm4dd</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1ax5l73" sourceRef="GetTicketInQueueMachineId" targetRef="Gateway_1rqsgao" />
+    <bpmn:sequenceFlow id="Flow_1imyjzs" name="Ticket deposit" sourceRef="Gateway_1rqsgao" targetRef="DepositOpeningProcessId">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${ticket=='deposit'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_13dm4dd" name="Ticket credit" sourceRef="Gateway_1rqsgao" targetRef="CreditObtainingProcessId">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${ticket=='credit'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:callActivity id="DepositOpeningProcessId" name="OpenDeposit" calledElement="DepositOpening">
+      <bpmn:extensionElements>
+        <camunda:in businessKey="#{execution.processBusinessKey}" />
+        <camunda:out variables="all" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1imyjzs</bpmn:incoming>
+      <bpmn:outgoing>Flow_1qqjnhz</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:callActivity id="CreditObtainingProcessId" name="Get a credit" calledElement="CreditObtaining">
+      <bpmn:extensionElements>
+        <camunda:in businessKey="#{execution.processBusinessKey}" />
+        <camunda:in variables="all" />
+        <camunda:out variables="all" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_13dm4dd</bpmn:incoming>
+      <bpmn:outgoing>Flow_09ygc70</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:exclusiveGateway id="Gateway_0qz9r6u">
+      <bpmn:incoming>Flow_09ygc70</bpmn:incoming>
+      <bpmn:incoming>Flow_1qqjnhz</bpmn:incoming>
+      <bpmn:outgoing>Flow_1tdz8sn</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_09ygc70" sourceRef="CreditObtainingProcessId" targetRef="Gateway_0qz9r6u" />
+    <bpmn:sequenceFlow id="Flow_1qqjnhz" sourceRef="DepositOpeningProcessId" targetRef="Gateway_0qz9r6u" />
+    <bpmn:callActivity id="ActivityRoadToHomeId" name="RoadToHome" calledElement="GoingHome">
+      <bpmn:extensionElements>
+        <camunda:in variables="all" />
+        <camunda:in businessKey="#{execution.processBusinessKey}" />
+        <camunda:out variables="all" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1tdz8sn</bpmn:incoming>
+      <bpmn:outgoing>Flow_0h4yrfo</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:sequenceFlow id="Flow_1tdz8sn" sourceRef="Gateway_0qz9r6u" targetRef="ActivityRoadToHomeId" />
+    <bpmn:sequenceFlow id="Flow_0h4yrfo" sourceRef="ActivityRoadToHomeId" targetRef="EndEvent_0x6ir2l" />
+    <bpmn:subProcess id="Activity_0hdibua" name="Run out of the bank since client is criminal and doesn&#39;t want to be caught by police" triggeredByEvent="true">
+      <bpmn:startEvent id="ClientIsCriminalStartErrorId" name="Client is criminal start error">
+        <bpmn:outgoing>Flow_19k2fqg</bpmn:outgoing>
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_0s5s0jr" errorRef="Error_0w23sbu" camunda:errorCodeVariable="CLIENT_IS_CRIMINAL_ERROR" />
+      </bpmn:startEvent>
+      <bpmn:scriptTask id="Activity_1pktzui" name="Run out of the bank" scriptFormat="JavaScript" camunda:resource="script/run-out-of-the-bank.js">
+        <bpmn:incoming>Flow_19k2fqg</bpmn:incoming>
+        <bpmn:outgoing>Flow_1utrfpw</bpmn:outgoing>
+      </bpmn:scriptTask>
+      <bpmn:sequenceFlow id="Flow_19k2fqg" sourceRef="ClientIsCriminalStartErrorId" targetRef="Activity_1pktzui" />
+      <bpmn:endEvent id="ClientIsCriminalEndErrorId" name="Client is criminal end error">
+        <bpmn:incoming>Flow_1utrfpw</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_1utrfpw" sourceRef="Activity_1pktzui" targetRef="ClientIsCriminalEndErrorId" />
+    </bpmn:subProcess>
+    <bpmn:subProcess id="Activity_1d7h8ac" name="Go home after operation sudden interuption" triggeredByEvent="true">
+      <bpmn:startEvent id="Event_1dzoe5x" name="Event sudden operation interruption error start">
+        <bpmn:outgoing>Flow_10n37eq</bpmn:outgoing>
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_0xfdcpo" errorRef="Error_0woyli4" camunda:errorCodeVariable="SUDDEN_OPERATION_INTERRUPTION_ERROR" />
+      </bpmn:startEvent>
+      <bpmn:sequenceFlow id="Flow_10n37eq" sourceRef="Event_1dzoe5x" targetRef="RoadToHomeAfterExceptionId" />
+      <bpmn:callActivity id="RoadToHomeAfterExceptionId" name="RoadToHomeAfterException" calledElement="GoingHome">
+        <bpmn:extensionElements>
+          <camunda:in businessKey="#{execution.processBusinessKey}" />
+          <camunda:in variables="all" />
+          <camunda:out variables="all" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_10n37eq</bpmn:incoming>
+        <bpmn:outgoing>Flow_1symup8</bpmn:outgoing>
+      </bpmn:callActivity>
+      <bpmn:endEvent id="EventSuddenOperationInteruptionErrorEndId" name="EventSuddenOperationInteruptionErrorEnd">
+        <bpmn:incoming>Flow_1symup8</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_1symup8" sourceRef="RoadToHomeAfterExceptionId" targetRef="EventSuddenOperationInteruptionErrorEndId" />
+    </bpmn:subProcess>
+    <bpmn:subProcess id="Activity_1trcdq2" name="Go home after operation sudden interuption when no more deposits" triggeredByEvent="true">
+      <bpmn:startEvent id="Event_1xuu5t4" name="Event sudden operation interruption error when no more deposits start">
+        <bpmn:outgoing>Flow_0kfk8v3</bpmn:outgoing>
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_1nns1xm" errorRef="Error_0woyli4" camunda:errorCodeVariable="NO_MORE_DEPOST_TO_OPEN" />
+      </bpmn:startEvent>
+      <bpmn:callActivity id="Activity_0g6az7k" name="RoadToHomeAfterNoMoreDepositsException" calledElement="GoingHome">
+        <bpmn:extensionElements>
+          <camunda:in businessKey="#{execution.processBusinessKey}" />
+          <camunda:in variables="all" />
+          <camunda:out variables="all" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_0kfk8v3</bpmn:incoming>
+        <bpmn:outgoing>Flow_06lf7js</bpmn:outgoing>
+      </bpmn:callActivity>
+      <bpmn:endEvent id="Event_1lzutjd" name="EventSuddenOperationInteruptionErrorWhenNoMoreDepositsEnd">
+        <bpmn:incoming>Flow_06lf7js</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_0kfk8v3" sourceRef="Event_1xuu5t4" targetRef="Activity_0g6az7k" />
+      <bpmn:sequenceFlow id="Flow_06lf7js" sourceRef="Activity_0g6az7k" targetRef="Event_1lzutjd" />
+    </bpmn:subProcess>
+    <bpmn:subProcess id="Activity_1qq0kba" name="Go home after operation sudden interuption when not enough money" triggeredByEvent="true">
+      <bpmn:startEvent id="EventNotEnoughMoneyErrorStartId" name="Event not enough money error start">
+        <bpmn:outgoing>Flow_08gmm0c</bpmn:outgoing>
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_0z0asba" errorRef="Error_0woyli4" camunda:errorCodeVariable="NOT_ENOUGH_MONEY" />
+      </bpmn:startEvent>
+      <bpmn:callActivity id="Activity_0h2by8f" name="RoadToHomeAfterNotEnoughMoneyException" calledElement="GoingHome">
+        <bpmn:extensionElements>
+          <camunda:in businessKey="#{execution.processBusinessKey}" />
+          <camunda:in variables="all" />
+          <camunda:out variables="all" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_08gmm0c</bpmn:incoming>
+        <bpmn:outgoing>Flow_15a6645</bpmn:outgoing>
+      </bpmn:callActivity>
+      <bpmn:endEvent id="Event_16lhcin" name="EventSuddenOperationInteruptionErrorWhenNotEnoughMoney">
+        <bpmn:incoming>Flow_15a6645</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_08gmm0c" sourceRef="EventNotEnoughMoneyErrorStartId" targetRef="Activity_0h2by8f" />
+      <bpmn:sequenceFlow id="Flow_15a6645" sourceRef="Activity_0h2by8f" targetRef="Event_16lhcin" />
+    </bpmn:subProcess>
+    <bpmn:textAnnotation id="TextAnnotation_047h0h1">
+      <bpmn:text>Camunda forms - Choose transport to the bank (walking or taxi ?)</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1xbm66c" associationDirection="None" sourceRef="GoingToBankId" targetRef="TextAnnotation_047h0h1" />
+    <bpmn:textAnnotation id="TextAnnotation_1i1ay0u">
+      <bpmn:text>if taxi then reduce money from wallet</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1kcl74r" associationDirection="None" sourceRef="PayForTheTaxi" targetRef="TextAnnotation_1i1ay0u" />
+    <bpmn:textAnnotation id="TextAnnotation_0kfcz38">
+      <bpmn:text>Choose ticket in queue machine deposit or credit</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0jahg7r" associationDirection="None" sourceRef="GetTicketInQueueMachineId" targetRef="TextAnnotation_0kfcz38" />
+    <bpmn:textAnnotation id="TextAnnotation_0afhm2p">
+      <bpmn:text>Process of opening a deposit</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0vmzyzb" associationDirection="None" sourceRef="DepositOpeningProcessId" targetRef="TextAnnotation_0afhm2p" />
+    <bpmn:textAnnotation id="TextAnnotation_0nqu1xj">
+      <bpmn:text>Process of credit obtaining</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1vpmbng" associationDirection="None" sourceRef="CreditObtainingProcessId" targetRef="TextAnnotation_0nqu1xj" />
+    <bpmn:textAnnotation id="TextAnnotation_1p1zk38">
+      <bpmn:text>Choose transport to going home after bank visit</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0dgy8lw" associationDirection="None" sourceRef="ActivityRoadToHomeId" targetRef="TextAnnotation_1p1zk38" />
+  </bpmn:process>
+  <bpmn:error id="Error_0w23sbu" name="CLIENT_IS_CRIMINAL_ERROR" errorCode="CLIENT_IS_CRIMINAL_ERROR" camunda:errorMessage="CLIENT_IS_CRIMINAL_ERROR" />
+  <bpmn:error id="Error_0woyli4" name="NOT_ENOUGH_MONEY" errorCode="NOT_ENOUGH_MONEY" camunda:errorMessage="NOT_ENOUGH_MONEY" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="MainDepositCreditProcess">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="399" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="155" y="442" width="88" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0x6ir2l_di" bpmnElement="EndEvent_0x6ir2l">
+        <dc:Bounds x="1952" y="399" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0piflfq_di" bpmnElement="GoingToBankId" bioc:stroke="#0d4372" bioc:fill="#bbdefb" color:background-color="#bbdefb" color:border-color="#0d4372">
+        <dc:Bounds x="330" y="377" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0lrw31a_di" bpmnElement="PayForTheTaxi" bioc:stroke="#6b3c00" bioc:fill="#ffe0b2" color:background-color="#ffe0b2" color:border-color="#6b3c00">
+        <dc:Bounds x="590" y="250" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1ocns3p_di" bpmnElement="Gateway_1ocns3p" isMarkerVisible="true">
+        <dc:Bounds x="505" y="392" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="499" y="449" width="69" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1a9im37_di" bpmnElement="GetTicketInQueueMachineId" bioc:stroke="#0d4372" bioc:fill="#bbdefb" color:background-color="#bbdefb" color:border-color="#0d4372">
+        <dc:Bounds x="800" y="377" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1rqsgao_di" bpmnElement="Gateway_1rqsgao" isMarkerVisible="true">
+        <dc:Bounds x="1035" y="392" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1098" y="410" width="84" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0brol83_di" bpmnElement="DepositOpeningProcessId" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="1220" y="220" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1w97m6w_di" bpmnElement="CreditObtainingProcessId" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="1220" y="530" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0qz9r6u_di" bpmnElement="Gateway_0qz9r6u" isMarkerVisible="true">
+        <dc:Bounds x="1535" y="392" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0d62dnj_di" bpmnElement="ActivityRoadToHomeId" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="1730" y="377" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_09u030z_di" bpmnElement="Activity_0hdibua" isExpanded="true">
+        <dc:Bounds x="1020" y="1040" width="560" height="200" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1gypxim_di" bpmnElement="ClientIsCriminalStartErrorId" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
+        <dc:Bounds x="1072" y="1122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1053" y="1165" width="81" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ylf34q_di" bpmnElement="Activity_1pktzui" bioc:stroke="#5b176d" bioc:fill="#e1bee7" color:background-color="#e1bee7" color:border-color="#5b176d">
+        <dc:Bounds x="1250" y="1100" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0xjwrnf_di" bpmnElement="ClientIsCriminalEndErrorId">
+        <dc:Bounds x="1502" y="1122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1480" y="1165" width="81" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_19k2fqg_di" bpmnElement="Flow_19k2fqg">
+        <di:waypoint x="1108" y="1140" />
+        <di:waypoint x="1250" y="1140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1utrfpw_di" bpmnElement="Flow_1utrfpw">
+        <di:waypoint x="1350" y="1140" />
+        <di:waypoint x="1502" y="1140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_193cgtd_di" bpmnElement="Activity_1d7h8ac" isExpanded="true">
+        <dc:Bounds x="1020" y="790" width="560" height="190" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1yae9to_di" bpmnElement="Event_1dzoe5x" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
+        <dc:Bounds x="1082" y="852" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1062" y="895" width="82" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1l016n0_di" bpmnElement="RoadToHomeAfterExceptionId" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="1240" y="830" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1d1hal9_di" bpmnElement="EventSuddenOperationInteruptionErrorEndId">
+        <dc:Bounds x="1462" y="852" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1438" y="895" width="87" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_10n37eq_di" bpmnElement="Flow_10n37eq">
+        <di:waypoint x="1118" y="870" />
+        <di:waypoint x="1240" y="870" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1symup8_di" bpmnElement="Flow_1symup8">
+        <di:waypoint x="1340" y="870" />
+        <di:waypoint x="1462" y="870" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BPMNShape_0d0dprf" bpmnElement="Activity_1trcdq2" isExpanded="true">
+        <dc:Bounds x="430" y="790" width="560" height="190" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0rl98lb" bpmnElement="Event_1xuu5t4" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
+        <dc:Bounds x="492" y="852" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="470" y="895" width="82" height="66" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1ghshrf" bpmnElement="Activity_0g6az7k" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="650" y="830" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1tlb1tc" bpmnElement="Event_1lzutjd">
+        <dc:Bounds x="872" y="852" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="847" y="895" width="89" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_1mzmii4" bpmnElement="Flow_0kfk8v3">
+        <di:waypoint x="528" y="870" />
+        <di:waypoint x="650" y="870" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_15qm1ji" bpmnElement="Flow_06lf7js">
+        <di:waypoint x="750" y="870" />
+        <di:waypoint x="872" y="870" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BPMNShape_0rz9wzs" bpmnElement="Activity_1qq0kba" isExpanded="true">
+        <dc:Bounds x="1630" y="790" width="560" height="190" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_08iuinc" bpmnElement="EventNotEnoughMoneyErrorStartId" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
+        <dc:Bounds x="1692" y="852" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1671" y="895" width="87" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_16wfolp" bpmnElement="Activity_0h2by8f" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="1850" y="830" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1wibjkd" bpmnElement="Event_16lhcin">
+        <dc:Bounds x="2072" y="852" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2049" y="895" width="87" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_0tvh1ra" bpmnElement="Flow_08gmm0c">
+        <di:waypoint x="1728" y="870" />
+        <di:waypoint x="1850" y="870" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_0eolpm0" bpmnElement="Flow_15a6645">
+        <di:waypoint x="1950" y="870" />
+        <di:waypoint x="2072" y="870" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_047h0h1_di" bpmnElement="TextAnnotation_047h0h1">
+        <dc:Bounds x="230" y="240" width="100" height="83.99951934814453" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1i1ay0u_di" bpmnElement="TextAnnotation_1i1ay0u">
+        <dc:Bounds x="480" y="90" width="100" height="54.99031066894531" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0kfcz38_di" bpmnElement="TextAnnotation_0kfcz38">
+        <dc:Bounds x="690" y="550" width="100" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0afhm2p_di" bpmnElement="TextAnnotation_0afhm2p">
+        <dc:Bounds x="1220" y="80" width="100" height="54.99031066894531" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0nqu1xj_di" bpmnElement="TextAnnotation_0nqu1xj">
+        <dc:Bounds x="1220" y="720" width="100" height="40.988372802734375" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1p1zk38_di" bpmnElement="TextAnnotation_1p1zk38">
+        <dc:Bounds x="1730" y="225" width="100" height="69.9975814819336" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1ayts2e_di" bpmnElement="Flow_1ayts2e">
+        <di:waypoint x="430" y="417" />
+        <di:waypoint x="505" y="417" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1d027ry_di" bpmnElement="Flow_1d027ry">
+        <di:waypoint x="215" y="417" />
+        <di:waypoint x="330" y="417" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0tzdc8o_di" bpmnElement="Flow_0tzdc8o">
+        <di:waypoint x="530" y="392" />
+        <di:waypoint x="530" y="290" />
+        <di:waypoint x="590" y="290" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="536" y="338" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1uonpq7_di" bpmnElement="Flow_1uonpq7">
+        <di:waypoint x="555" y="417" />
+        <di:waypoint x="800" y="417" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="666" y="399" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00n31xm_di" bpmnElement="Flow_00n31xm">
+        <di:waypoint x="690" y="290" />
+        <di:waypoint x="850" y="290" />
+        <di:waypoint x="850" y="377" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ax5l73_di" bpmnElement="Flow_1ax5l73">
+        <di:waypoint x="900" y="417" />
+        <di:waypoint x="1035" y="417" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1imyjzs_di" bpmnElement="Flow_1imyjzs">
+        <di:waypoint x="1060" y="392" />
+        <di:waypoint x="1060" y="260" />
+        <di:waypoint x="1220" y="260" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1065" y="323" width="69" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_13dm4dd_di" bpmnElement="Flow_13dm4dd">
+        <di:waypoint x="1060" y="442" />
+        <di:waypoint x="1060" y="570" />
+        <di:waypoint x="1220" y="570" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1071" y="503" width="60" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09ygc70_di" bpmnElement="Flow_09ygc70">
+        <di:waypoint x="1320" y="570" />
+        <di:waypoint x="1560" y="570" />
+        <di:waypoint x="1560" y="442" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qqjnhz_di" bpmnElement="Flow_1qqjnhz">
+        <di:waypoint x="1320" y="260" />
+        <di:waypoint x="1560" y="260" />
+        <di:waypoint x="1560" y="392" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1tdz8sn_di" bpmnElement="Flow_1tdz8sn">
+        <di:waypoint x="1584" y="418" />
+        <di:waypoint x="1730" y="420" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0h4yrfo_di" bpmnElement="Flow_0h4yrfo">
+        <di:waypoint x="1830" y="417" />
+        <di:waypoint x="1952" y="417" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1xbm66c_di" bpmnElement="Association_1xbm66c">
+        <di:waypoint x="355" y="377" />
+        <di:waypoint x="323" y="324" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1kcl74r_di" bpmnElement="Association_1kcl74r">
+        <di:waypoint x="616" y="250" />
+        <di:waypoint x="554" y="145" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0jahg7r_di" bpmnElement="Association_0jahg7r">
+        <di:waypoint x="820" y="457" />
+        <di:waypoint x="751" y="550" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0vmzyzb_di" bpmnElement="Association_0vmzyzb">
+        <di:waypoint x="1270" y="220" />
+        <di:waypoint x="1270" y="135" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1vpmbng_di" bpmnElement="Association_1vpmbng">
+        <di:waypoint x="1270" y="610" />
+        <di:waypoint x="1270" y="720" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0dgy8lw_di" bpmnElement="Association_0dgy8lw">
+        <di:waypoint x="1780" y="377" />
+        <di:waypoint x="1780" y="295" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

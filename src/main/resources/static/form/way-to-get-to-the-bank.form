@@ -1,0 +1,56 @@
+{
+  "components": [
+    {
+      "values": [
+        {
+          "label": "taxi",
+          "value": "taxi"
+        },
+        {
+          "label": "walk",
+          "value": "walk"
+        }
+      ],
+      "label": "taxi or walk",
+      "type": "radio",
+      "layout": {
+        "row": "Row_0p0c0r2",
+        "columns": 10
+      },
+      "id": "Field_12l1h61",
+      "key": "transportMode",
+      "description": "taxi or walk",
+      "validate": {
+        "required": true
+      },
+      "defaultValue": "taxi",
+      "disabled": false
+    },
+    {
+      "label": "cost of taxi",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_17yk6c3",
+        "columns": 7
+      },
+      "id": "Field_1pr8ho4",
+      "key": "taxiCost",
+      "description": "cost of taxi to driving to the bank, cost can be in decimal only",
+      "defaultValue": "0.0",
+      "validate": {
+        "required": true,
+        "pattern": "^\\d+(\\.\\d+)?$"
+      },
+      "disabled": false
+    }
+  ],
+  "type": "default",
+  "id": "Form_05hkpel",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.22.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.21.0",
+  "schemaVersion": 16
+}

@@ -1,0 +1,176 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.3.3</version>
+    <relativePath/>
+  </parent>
+
+  <groupId>com.example.bankService</groupId>
+  <artifactId>bank-service-application</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+  </properties>
+
+  <dependencyManagement>
+
+<!--    Springboot ensures version compatibility between libraries-->
+<!--    to avoid conflicts.-->
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>3.3.3</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+<!--      Camunda BOM(Bill of material)- manages  versions of all Camunda dependencies-->
+      <dependency>
+        <groupId>org.camunda.bpm</groupId>
+        <artifactId>camunda-bom</artifactId>
+        <version>7.22.0</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+<!--    Adds Camunda REST API- enables managing  processes, tasks, an variables via HTTP.-->
+<!--    allows you to interact with thhe process via postman: start, get tasks, complete tasks etc.-->
+    <dependency>
+      <groupId>org.camunda.bpm.springboot</groupId>
+      <artifactId>camunda-bpm-spring-boot-starter-rest</artifactId>
+    </dependency>
+
+<!--    Enables Camunda interfaces: Tasklist, cockpit, admin.-->
+<!--    Allows UI to view processes, complete tasks,manage users etc.-->
+    <dependency>
+      <groupId>org.camunda.bpm.springboot</groupId>
+      <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
+    </dependency>
+
+<!--    Plugin form Camunda that adds support form complex object serialization (e.g.JSON) via spin-->
+<!--    Allows working with JSON/ Java objects as process variables, including FEEL expressions.-->
+    <dependency>
+      <groupId>org.camunda.bpm</groupId>
+      <artifactId>camunda-engine-plugin-spin</artifactId>
+    </dependency>
+
+<!--    Adds support form testing Camunda processes:-->
+<!--    proess execution, state verification,task and variable assertions-->
+    <dependency>
+      <groupId>org.camunda.bpm.springboot</groupId>
+      <artifactId>camunda-bpm-spring-boot-starter-test</artifactId>
+    </dependency>
+
+<!--    Adds support form Rest controllers, servlets,and embedded tomcat-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+<!--    Connects the build in memory in h2 database-->
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+    </dependency>
+
+<!--    Enables JDBC(database connections), Datasource, and connection pool.-->
+<!--    Required form database operations in Camundda and springboot-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-jdbc</artifactId>
+    </dependency>
+
+    <!--    <dependency>-->
+    <!--      <groupId>org.camunda.spin</groupId>-->
+    <!--      <artifactId>camunda-spin-dataformat-all</artifactId>-->
+    <!--    </dependency>-->
+
+
+<!--    Camunda-spin-core + camunda-spin-dataformat-json-jackson-->
+<!--      Adds  Camunda spin library + JSON support via Jackson-->
+<!--      Allows: -->
+<!--      -Storing objects as JSON-->
+<!--      -Accessing objects fields in forms of FEEL expressions, like: $(client.wallet.moneyCount)-->
+    <dependency>
+      <groupId>org.camunda.spin</groupId>
+      <artifactId>camunda-spin-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.camunda.spin</groupId>
+      <artifactId>camunda-spin-dataformat-json-jackson</artifactId>
+    </dependency>
+
+<!--      Javascript engine nashorn(moved to a separate module after Java 15+)-->
+<!--      Required form using javascript tasks with javascript(e.g.Script Format: javascript)-->
+      <dependency>
+       <groupId>org.openjdk.nashorn</groupId>
+       <artifactId>nashorn-core</artifactId>
+       <version>15.4</version>
+      </dependency>
+
+<!--      Adds convenient assertion syntax in tests-->
+      <dependency>
+          <groupId>org.assertj</groupId>
+          <artifactId>assertj-core</artifactId>
+          <version>3.13.2</version>
+          <scope>test</scope>
+      </dependency>
+
+<!--      Extends junit5 support form Camunda:-->
+<!--      annotations, utilities, helpful test rules.-->
+<!--      Makes it easier to write process tests with JUnit5-->
+      <dependency>
+          <groupId>org.camunda.bpm.extension</groupId>
+          <artifactId>camunda-bpm-junit5</artifactId>
+          <version>1.0.2</version>
+          <scope>test</scope>
+      </dependency>
+
+<!--      Generate getters, setters etc using annotations.-->
+<!--      Reduce boilerplate  code in java-->
+<!--      Marked as 'provide' - not included in final JAR, only used during compilations.-->
+      <dependency>
+          <groupId>org.projectlombok</groupId>
+          <artifactId>lombok</artifactId>
+          <scope>provided</scope>
+      </dependency>
+
+  </dependencies>
+
+  <repositories>
+    <repository>
+      <id>maven-central</id>
+      <url>https://repo.maven.apache.org/maven2</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>maven-central</id>
+      <url>https://repo.maven.apache.org/maven2</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>3.3.3</version>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

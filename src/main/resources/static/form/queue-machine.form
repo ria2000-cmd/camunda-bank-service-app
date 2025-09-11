@@ -1,0 +1,35 @@
+{
+  "components": [
+    {
+      "values": [
+        {
+          "label": "Deposit",
+          "value": "deposit"
+        },
+        {
+          "label": "Credit",
+          "value": "credit"
+        }
+      ],
+      "label": "Deposit or Credit",
+      "type": "select",
+      "layout": {
+        "row": "Row_05e30x2",
+        "columns": null
+      },
+      "id": "Field_0ac1s9z",
+      "key": "ticket",
+      "description": "Please do your choice",
+      "defaultValue": "deposit"
+    }
+  ],
+  "type": "default",
+  "id": "Form_05hkpel",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.22.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.21.0",
+  "schemaVersion": 16
+}
