@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0x6sg3s" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.22.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.21.0">
+  <bpmn:process id="BankEmailCongratsId" name="BankEmailCongrats" isExecutable="true" camunda:historyTimeToLive="7">
+    <bpmn:scriptTask id="ActivityCongratsEmailAfterwardsId" name="Activity congrats email afterwards" scriptFormat="JavaScript" camunda:resource="script/bank-email-congrats.js">
+      <bpmn:incoming>Flow_0d5icvx</bpmn:incoming>
+      <bpmn:outgoing>Flow_1e70ip7</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="Flow_02h6eh7" sourceRef="SignalStartEmailCongratsId" targetRef="EmailDelayTimerId" />
+    <bpmn:sequenceFlow id="Flow_1e70ip7" sourceRef="ActivityCongratsEmailAfterwardsId" targetRef="Event_0c387xa" />
+    <bpmn:startEvent id="SignalStartEmailCongratsId" name="Signal start email congrats">
+      <bpmn:outgoing>Flow_02h6eh7</bpmn:outgoing>
+      <bpmn:signalEventDefinition id="SignalEventDefinition_1p2ee2k" signalRef="Signal_076o3le" />
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0d5icvx" sourceRef="EmailDelayTimerId" targetRef="ActivityCongratsEmailAfterwardsId" />
+    <bpmn:intermediateCatchEvent id="EmailDelayTimerId" name="Email delay timer">
+      <bpmn:incoming>Flow_02h6eh7</bpmn:incoming>
+      <bpmn:outgoing>Flow_0d5icvx</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_0x2ms7f">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT10S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="Event_0c387xa" name="Email congrats end event">
+      <bpmn:incoming>Flow_1e70ip7</bpmn:incoming>
+      <bpmn:terminateEventDefinition id="TerminateEventDefinition_0shpj8f" />
+    </bpmn:endEvent>
+    <bpmn:textAnnotation id="TextAnnotation_1t2ffe4">
+      <bpmn:text>1.Start email congrats process event</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0c8o5hm" associationDirection="None" sourceRef="SignalStartEmailCongratsId" targetRef="TextAnnotation_1t2ffe4" />
+    <bpmn:textAnnotation id="TextAnnotation_0rqsycw">
+      <bpmn:text>1.Prints congrats from Email</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0pjq7wj" associationDirection="None" sourceRef="ActivityCongratsEmailAfterwardsId" targetRef="TextAnnotation_0rqsycw" />
+    <bpmn:textAnnotation id="TextAnnotation_0ztxyi7">
+      <bpmn:text>1.Delay for sending about 10 seonds</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1sasj9w" associationDirection="None" sourceRef="EmailDelayTimerId" targetRef="TextAnnotation_0ztxyi7" />
+  </bpmn:process>
+  <bpmn:signal id="Signal_076o3le" name="Signal_success_process_finishing" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="BankEmailCongratsId">
+      <bpmndi:BPMNShape id="Activity_1uxd08j_di" bpmnElement="ActivityCongratsEmailAfterwardsId" bioc:stroke="#5b176d" bioc:fill="#e1bee7" color:background-color="#e1bee7" color:border-color="#5b176d">
+        <dc:Bounds x="570" y="150" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_144iqer_di" bpmnElement="SignalStartEmailCongratsId" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="252" y="172" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="231" y="215" width="85" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_03s7oay_di" bpmnElement="EmailDelayTimerId" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="402" y="172" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="378" y="215" width="86" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0h985ij_di" bpmnElement="Event_0c387xa">
+        <dc:Bounds x="812" y="172" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="794" y="215" width="73" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1t2ffe4_di" bpmnElement="TextAnnotation_1t2ffe4">
+        <dc:Bounds x="160" y="80" width="150" height="40" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0rqsycw_di" bpmnElement="TextAnnotation_0rqsycw">
+        <dc:Bounds x="650" y="50" width="110" height="40" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0ztxyi7_di" bpmnElement="TextAnnotation_0ztxyi7">
+        <dc:Bounds x="400" y="60" width="129.9903106689453" height="40.988372802734375" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_02h6eh7_di" bpmnElement="Flow_02h6eh7">
+        <di:waypoint x="288" y="190" />
+        <di:waypoint x="402" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1e70ip7_di" bpmnElement="Flow_1e70ip7">
+        <di:waypoint x="670" y="190" />
+        <di:waypoint x="812" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0d5icvx_di" bpmnElement="Flow_0d5icvx">
+        <di:waypoint x="438" y="190" />
+        <di:waypoint x="570" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0c8o5hm_di" bpmnElement="Association_0c8o5hm">
+        <di:waypoint x="261" y="175" />
+        <di:waypoint x="226" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0pjq7wj_di" bpmnElement="Association_0pjq7wj">
+        <di:waypoint x="646" y="150" />
+        <di:waypoint x="684" y="90" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1sasj9w_di" bpmnElement="Association_1sasj9w">
+        <di:waypoint x="425" y="173" />
+        <di:waypoint x="443" y="101" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

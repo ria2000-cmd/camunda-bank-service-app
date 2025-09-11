@@ -10,12 +10,14 @@ C:\Users\rm113162\Documents\camunda-dev\bank-service-application\src\main\java\c
 C:\Users\rm113162\Documents\camunda-dev\bank-service-application\src\main\java\com\example\bankService\service\deposit\delegate\bank\ClientParticularValidationDelegate.java
 C:\Users\rm113162\Documents\camunda-dev\bank-service-application\src\main\java\com\example\bankService\service\deposit\delegate\bank\DepositListProvidingDelegate.java
 C:\Users\rm113162\Documents\camunda-dev\bank-service-application\src\main\java\com\example\bankService\service\deposit\delegate\bank\DocumentPreparationDelegate.java
+C:\Users\rm113162\Documents\camunda-dev\bank-service-application\src\main\java\com\example\bankService\service\deposit\delegate\bank\MoneyCountVerificationDelegate.java
 C:\Users\rm113162\Documents\camunda-dev\bank-service-application\src\main\java\com\example\bankService\service\deposit\delegate\bank\PrepareSmsDelegate.java
 C:\Users\rm113162\Documents\camunda-dev\bank-service-application\src\main\java\com\example\bankService\service\deposit\delegate\bank\SendFailedVerificationSmsDelegate.java
 C:\Users\rm113162\Documents\camunda-dev\bank-service-application\src\main\java\com\example\bankService\service\deposit\delegate\bank\SendSuccessVerificationSmsDelegate.java
 C:\Users\rm113162\Documents\camunda-dev\bank-service-application\src\main\java\com\example\bankService\service\deposit\delegate\bank\SmsValidationDelegate.java
 C:\Users\rm113162\Documents\camunda-dev\bank-service-application\src\main\java\com\example\bankService\service\deposit\delegate\bank\StartVerificationSmsDelegate.java
 C:\Users\rm113162\Documents\camunda-dev\bank-service-application\src\main\java\com\example\bankService\service\deposit\delegate\client\DepositChoosingCountDelegate.java
+C:\Users\rm113162\Documents\camunda-dev\bank-service-application\src\main\java\com\example\bankService\service\deposit\delegate\client\DepositReplenishmentDelegate.java
 C:\Users\rm113162\Documents\camunda-dev\bank-service-application\src\main\java\com\example\bankService\service\deposit\delegate\client\PassportProvidingDelegate.java
 C:\Users\rm113162\Documents\camunda-dev\bank-service-application\src\main\java\com\example\bankService\service\deposit\delegate\client\SmsObtainingByClientDelegate.java
 C:\Users\rm113162\Documents\camunda-dev\bank-service-application\src\main\java\com\example\bankService\service\ValidationService.java

@@ -17,7 +17,6 @@ import static com.example.bankService.util.Constants.SUDDEN_OPERATION_INTERRUPTI
 public class PassportProvidingDelegate implements JavaDelegate {
 
 
-
     @Override
     public void execute(DelegateExecution delegateExecution) {
         log.info("The passportProvidingDelegate has started....");

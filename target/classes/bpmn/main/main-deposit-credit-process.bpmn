@@ -136,6 +136,26 @@
       <bpmn:sequenceFlow id="Flow_0kfk8v3" sourceRef="Event_1xuu5t4" targetRef="Activity_0g6az7k" />
       <bpmn:sequenceFlow id="Flow_06lf7js" sourceRef="Activity_0g6az7k" targetRef="Event_1lzutjd" />
     </bpmn:subProcess>
+    <bpmn:subProcess id="Activity_1qq0kba" name="Go home after operation sudden interuption when not enough money" triggeredByEvent="true">
+      <bpmn:startEvent id="EventNotEnoughMoneyErrorStartId" name="Event not enough money error start">
+        <bpmn:outgoing>Flow_08gmm0c</bpmn:outgoing>
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_0z0asba" errorRef="Error_0woyli4" camunda:errorCodeVariable="NOT_ENOUGH_MONEY" />
+      </bpmn:startEvent>
+      <bpmn:callActivity id="Activity_0h2by8f" name="RoadToHomeAfterNotEnoughMoneyException" calledElement="GoingHome">
+        <bpmn:extensionElements>
+          <camunda:in businessKey="#{execution.processBusinessKey}" />
+          <camunda:in variables="all" />
+          <camunda:out variables="all" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_08gmm0c</bpmn:incoming>
+        <bpmn:outgoing>Flow_15a6645</bpmn:outgoing>
+      </bpmn:callActivity>
+      <bpmn:endEvent id="Event_16lhcin" name="EventSuddenOperationInteruptionErrorWhenNotEnoughMoney">
+        <bpmn:incoming>Flow_15a6645</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_08gmm0c" sourceRef="EventNotEnoughMoneyErrorStartId" targetRef="Activity_0h2by8f" />
+      <bpmn:sequenceFlow id="Flow_15a6645" sourceRef="Activity_0h2by8f" targetRef="Event_16lhcin" />
+    </bpmn:subProcess>
     <bpmn:textAnnotation id="TextAnnotation_047h0h1">
       <bpmn:text>Camunda forms - Choose transport to the bank (walking or taxi ?)</bpmn:text>
     </bpmn:textAnnotation>
@@ -162,7 +182,7 @@
     <bpmn:association id="Association_0dgy8lw" associationDirection="None" sourceRef="ActivityRoadToHomeId" targetRef="TextAnnotation_1p1zk38" />
   </bpmn:process>
   <bpmn:error id="Error_0w23sbu" name="CLIENT_IS_CRIMINAL_ERROR" errorCode="CLIENT_IS_CRIMINAL_ERROR" camunda:errorMessage="CLIENT_IS_CRIMINAL_ERROR" />
-  <bpmn:error id="Error_0woyli4" name="NO_MORE_DEPOST_TO_OPEN" errorCode="NO_MORE_DEPOST_TO_OPEN" camunda:errorMessage="NO_MORE_DEPOST_TO_OPEN" />
+  <bpmn:error id="Error_0woyli4" name="NOT_ENOUGH_MONEY" errorCode="NOT_ENOUGH_MONEY" camunda:errorMessage="NOT_ENOUGH_MONEY" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="MainDepositCreditProcess">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
@@ -295,6 +315,34 @@
       <bpmndi:BPMNEdge id="BPMNEdge_15qm1ji" bpmnElement="Flow_06lf7js">
         <di:waypoint x="750" y="870" />
         <di:waypoint x="872" y="870" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BPMNShape_0rz9wzs" bpmnElement="Activity_1qq0kba" isExpanded="true">
+        <dc:Bounds x="1630" y="790" width="560" height="190" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_08iuinc" bpmnElement="EventNotEnoughMoneyErrorStartId" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
+        <dc:Bounds x="1692" y="852" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1671" y="895" width="87" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_16wfolp" bpmnElement="Activity_0h2by8f" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="1850" y="830" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1wibjkd" bpmnElement="Event_16lhcin">
+        <dc:Bounds x="2072" y="852" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2049" y="895" width="87" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_0tvh1ra" bpmnElement="Flow_08gmm0c">
+        <di:waypoint x="1728" y="870" />
+        <di:waypoint x="1850" y="870" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_0eolpm0" bpmnElement="Flow_15a6645">
+        <di:waypoint x="1950" y="870" />
+        <di:waypoint x="2072" y="870" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="TextAnnotation_047h0h1_di" bpmnElement="TextAnnotation_047h0h1">
         <dc:Bounds x="230" y="240" width="100" height="83.99951934814453" />

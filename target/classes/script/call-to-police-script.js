@@ -1,4 +1,4 @@
 
 print('Calling to the police, since client:'
-+ JSON.stringify(delegateExecution.getVariable('client').getName())
++ JSON.stringify(execution.getVariable('client').getName())
 + 'is criminal !' );

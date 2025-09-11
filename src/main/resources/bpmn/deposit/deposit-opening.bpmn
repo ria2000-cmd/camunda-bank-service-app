@@ -89,9 +89,8 @@
         <bpmn:flowNodeRef>ErrorNotEnoughMoneyId2</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>MoneyCountVerificationId</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ErrorNotEnoughMoneyHandle2</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>SignalToFinishDepositProcessId</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_1w8i6n4</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Event_0c387xa</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SignalToFinishDepositProcessId</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_1snd3gf" name="Client">
         <bpmn:flowNodeRef>Event_1b7ou18</bpmn:flowNodeRef>
@@ -194,7 +193,7 @@
       <bpmn:incoming>Flow_10xl3ey</bpmn:incoming>
       <bpmn:outgoing>Flow_0nzlzo4</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:exclusiveGateway id="Gateway_0hz02db" name="is contract signed?">
+    <bpmn:exclusiveGateway id="Gateway_0hz02db" name="is contract signed?" default="Flow_1hx9fmv">
       <bpmn:incoming>Flow_0nzlzo4</bpmn:incoming>
       <bpmn:outgoing>Flow_1hx9fmv</bpmn:outgoing>
       <bpmn:outgoing>Flow_1vlbf2b</bpmn:outgoing>
@@ -287,8 +286,7 @@
     <bpmn:sequenceFlow id="Flow_1h0166x" sourceRef="DepositChoosingCountEndLinkId" targetRef="DocumentsPreparationId" />
     <bpmn:sequenceFlow id="Flow_10xl3ey" sourceRef="DocumentsPreparationId" targetRef="ReadAndSignContractId" />
     <bpmn:sequenceFlow id="Flow_0nzlzo4" sourceRef="ReadAndSignContractId" targetRef="Gateway_0hz02db" />
-    <bpmn:sequenceFlow id="Flow_1hx9fmv" sourceRef="Gateway_0hz02db" targetRef="DepositChoosingCountId" />
-    <bpmn:sequenceFlow id="Flow_1e70ip7" sourceRef="Activity_1w8i6n4" targetRef="Event_0c387xa" />
+    <bpmn:sequenceFlow id="Flow_1hx9fmv" name="no" sourceRef="Gateway_0hz02db" targetRef="DepositChoosingCountId" />
     <bpmn:sequenceFlow id="Flow_138wmjq" sourceRef="DepositChoosingCountId" targetRef="DepositChoosingId" />
     <bpmn:sequenceFlow id="Flow_1gtnnks" sourceRef="ErrorNoMoreDepositHandleId" targetRef="ErrorNoMoreDepositThrowId" />
     <bpmn:sequenceFlow id="Flow_07qf5re" sourceRef="DepositChoosingId" targetRef="GatewayIsDepositChosen" />
@@ -330,30 +328,26 @@
       <bpmn:incoming>Flow_0slvugz</bpmn:incoming>
       <bpmn:outgoing>Flow_1kuvj28</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="Flow_1kuvj28" sourceRef="MoneyCountVerificationId" targetRef="Activity_1w8i6n4" />
+    <bpmn:sequenceFlow id="Flow_1kuvj28" sourceRef="MoneyCountVerificationId" targetRef="SignalToFinishDepositProcessId" />
     <bpmn:sequenceFlow id="Flow_0slvugz" sourceRef="CountOfMoneyToReplenishId" targetRef="MoneyCountVerificationId" />
     <bpmn:boundaryEvent id="ErrorNotEnoughMoneyHandle2" name="Error not enough money handle 2" attachedToRef="MoneyCountVerificationId">
       <bpmn:outgoing>Flow_0j172lr</bpmn:outgoing>
       <bpmn:errorEventDefinition id="ErrorEventDefinition_045epxv" errorRef="Error_0x8pnhh" />
     </bpmn:boundaryEvent>
     <bpmn:sequenceFlow id="Flow_0j172lr" sourceRef="ErrorNotEnoughMoneyHandle2" targetRef="ErrorNotEnoughMoneyId2" />
+    <bpmn:scriptTask id="Activity_1w8i6n4" name="Deposit opening process" camunda:asyncBefore="true" scriptFormat="JavaScript">
+      <bpmn:script>print('The deposit opening process is finished!');
+
+</bpmn:script>
+    </bpmn:scriptTask>
     <bpmn:endEvent id="SignalToFinishDepositProcessId" name="Signal to finish deposit process">
+      <bpmn:incoming>Flow_1kuvj28</bpmn:incoming>
       <bpmn:signalEventDefinition id="SignalEventDefinition_0cuxz5o" signalRef="Signal_245u2af">
         <bpmn:extensionElements>
           <camunda:in sourceExpression="${execution.getVariable(&#39;client&#39;).getName()}" target="clientName" />
           <camunda:in sourceExpression="${execution.getVariable(&#39;ticket&#39;)}" target="ticket" />
         </bpmn:extensionElements>
       </bpmn:signalEventDefinition>
-    </bpmn:endEvent>
-    <bpmn:scriptTask id="Activity_1w8i6n4" name="Deposit opening process" camunda:asyncBefore="true" scriptFormat="JavaScript">
-      <bpmn:incoming>Flow_1kuvj28</bpmn:incoming>
-      <bpmn:outgoing>Flow_1e70ip7</bpmn:outgoing>
-      <bpmn:script>print('The deposit opening process is finished!');
-
-</bpmn:script>
-    </bpmn:scriptTask>
-    <bpmn:endEvent id="Event_0c387xa">
-      <bpmn:incoming>Flow_1e70ip7</bpmn:incoming>
     </bpmn:endEvent>
   </bpmn:process>
   <bpmn:error id="Error_0vvuwgu" name="SUDDEN_OPERATION_INTERRUPTION_ERROR" errorCode="SUDDEN_OPERATION_INTERRUPTION_ERROR" />
@@ -504,18 +498,15 @@
           <dc:Bounds x="2041" y="725" width="84" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1t1ikla_di" bpmnElement="SignalToFinishDepositProcessId" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
-        <dc:Bounds x="3252" y="972" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="3251" y="1015" width="78" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1uxd08j_di" bpmnElement="Activity_1w8i6n4" bioc:stroke="#5b176d" bioc:fill="#e1bee7" color:background-color="#e1bee7" color:border-color="#5b176d">
-        <dc:Bounds x="3340" y="760" width="100" height="80" />
+        <dc:Bounds x="3400" y="1080" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0c387xa_di" bpmnElement="Event_0c387xa">
-        <dc:Bounds x="3552" y="782" width="36" height="36" />
+      <bpmndi:BPMNShape id="Event_1t1ikla_di" bpmnElement="SignalToFinishDepositProcessId" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="3282" y="782" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3281" y="825" width="78" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_00v62x1_di" bpmnElement="Activity_1lcl85k" isExpanded="true">
         <dc:Bounds x="2647" y="1000" width="360" height="200" />
@@ -707,10 +698,9 @@
       <bpmndi:BPMNEdge id="Flow_1hx9fmv_di" bpmnElement="Flow_1hx9fmv">
         <di:waypoint x="2497" y="465" />
         <di:waypoint x="2497" y="330" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1e70ip7_di" bpmnElement="Flow_1e70ip7">
-        <di:waypoint x="3440" y="800" />
-        <di:waypoint x="3552" y="800" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2506" y="395" width="13" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_138wmjq_di" bpmnElement="Flow_138wmjq">
         <di:waypoint x="2447" y="290" />
@@ -764,7 +754,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1kuvj28_di" bpmnElement="Flow_1kuvj28">
         <di:waypoint x="3090" y="800" />
-        <di:waypoint x="3340" y="800" />
+        <di:waypoint x="3282" y="800" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0slvugz_di" bpmnElement="Flow_0slvugz">
         <di:waypoint x="3040" y="530" />
@@ -776,8 +766,8 @@
         <di:waypoint x="3292" y="680" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Association_1ul44yr_di" bpmnElement="Association_1ul44yr">
-        <di:waypoint x="3260" y="1005" />
-        <di:waypoint x="3220" y="1063" />
+        <di:waypoint x="3287" y="812" />
+        <di:waypoint x="3235" y="863" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="TextAnnotation_10pn2hk_di" bpmnElement="TextAnnotation_10pn2hk">
         <dc:Bounds x="220" y="310" width="140" height="83" />
@@ -900,7 +890,7 @@
         <di:waypoint x="2970" y="870" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="TextAnnotation_1w8ei89_di" bpmnElement="TextAnnotation_1w8ei89">
-        <dc:Bounds x="3150" y="1063" width="130" height="84" />
+        <dc:Bounds x="3150" y="863" width="130" height="84" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>

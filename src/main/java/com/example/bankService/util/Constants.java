@@ -116,6 +116,7 @@ public class Constants {
     public static final String VERIFICATION_SMS_NOT_OBTAINED = "VERIFICATION_SMS_NOT_OBTAINED";
     public static final String LIMIT_OF_VERIFICATION_SMS_ATTEMPTS_EXCEEDED = "LIMIT_OF_VERIFICATION_SMS_ATTEMPTS_EXCEEDED";
     public static final String NO_MORE_DEPOSITS_TO_OPEN = "NO_MORE_DEPOSITS_TO_OPEN";
+    public static final String NOT_ENOUGH_MONEY = "NOT_ENOUGH_MONEY";
 
     private static final Deposit EARLY_SPRING = Deposit.builder()
             .name("Early-Spring")

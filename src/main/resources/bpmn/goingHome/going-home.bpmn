@@ -5,35 +5,51 @@
       <bpmn:outgoing>Flow_02h6eh7</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:scriptTask id="Activity_1w8i6n4" name="Going home process" scriptFormat="JavaScript">
-      <bpmn:incoming>Flow_02h6eh7</bpmn:incoming>
+      <bpmn:incoming>Flow_1r1v6uq</bpmn:incoming>
       <bpmn:outgoing>Flow_1e70ip7</bpmn:outgoing>
-      <bpmn:script>print('Hello from Going home process')</bpmn:script>
+      <bpmn:script>var client = execution.getVariable('client');
+var transport = execution.getVarable('transport);
+
+print("Client :" + client.getName + "going home by" + transport);</bpmn:script>
     </bpmn:scriptTask>
-    <bpmn:sequenceFlow id="Flow_02h6eh7" sourceRef="StartEvent_1" targetRef="Activity_1w8i6n4" />
+    <bpmn:sequenceFlow id="Flow_02h6eh7" sourceRef="StartEvent_1" targetRef="ChooseTransportToHomeId" />
     <bpmn:endEvent id="Event_0c387xa">
       <bpmn:incoming>Flow_1e70ip7</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1e70ip7" sourceRef="Activity_1w8i6n4" targetRef="Event_0c387xa" />
+    <bpmn:sequenceFlow id="Flow_1r1v6uq" sourceRef="ChooseTransportToHomeId" targetRef="Activity_1w8i6n4" />
+    <bpmn:businessRuleTask id="ChooseTransportToHomeId" name="Choose transport to home" camunda:asyncBefore="true" camunda:resultVariable="transport" camunda:decisionRef="choose-transport-to-home-dmn" camunda:mapDecisionResult="singleEntry">
+      <bpmn:incoming>Flow_02h6eh7</bpmn:incoming>
+      <bpmn:outgoing>Flow_1r1v6uq</bpmn:outgoing>
+    </bpmn:businessRuleTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="GoingHome">
+      <bpmndi:BPMNShape id="Event_0c387xa_di" bpmnElement="Event_0c387xa">
+        <dc:Bounds x="712" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1uxd08j_di" bpmnElement="Activity_1w8i6n4">
+        <dc:Bounds x="520" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="152" y="102" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1uxd08j_di" bpmnElement="Activity_1w8i6n4">
-        <dc:Bounds x="310" y="80" width="100" height="80" />
+      <bpmndi:BPMNShape id="Activity_1ohjyo1_di" bpmnElement="ChooseTransportToHomeId">
+        <dc:Bounds x="290" y="80" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0c387xa_di" bpmnElement="Event_0c387xa">
-        <dc:Bounds x="522" y="102" width="36" height="36" />
-      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1e70ip7_di" bpmnElement="Flow_1e70ip7">
+        <di:waypoint x="620" y="120" />
+        <di:waypoint x="712" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1r1v6uq_di" bpmnElement="Flow_1r1v6uq">
+        <di:waypoint x="390" y="120" />
+        <di:waypoint x="520" y="120" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_02h6eh7_di" bpmnElement="Flow_02h6eh7">
         <di:waypoint x="188" y="120" />
-        <di:waypoint x="310" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1e70ip7_di" bpmnElement="Flow_1e70ip7">
-        <di:waypoint x="410" y="120" />
-        <di:waypoint x="522" y="120" />
+        <di:waypoint x="290" y="120" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
