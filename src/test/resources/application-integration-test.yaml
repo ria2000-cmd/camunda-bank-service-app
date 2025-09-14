@@ -1,0 +1,49 @@
+#Sets the name of the  spring Boot application
+#This name is used in logs and form identifying services in cloud environment
+spring:
+  application:
+    name: bank-service-application
+
+  h2:
+    console:
+      enabled: true
+      path: /h2
+
+  #Configures the H2 embedded database form Camunda
+  #jdbc:h2:file:/camunda-h2-database means the database is stored in a local file, no jus in memory
+  datasource:
+    url: jdbc:h2:file:./camunda-h2-database
+
+#Creates a default admin user when the application starts
+#you can log in to Camunda Tasklist, cockpit and admin with this account
+camunda:
+  bpm:
+    admin-user:
+      id: test
+      password: test
+
+
+    #Specifies that JSON should be used as the default format form serializing complex variables(like objects, lists, maps)
+    #Required form working with Spin, JSON variables, FEEL access
+    default-serialization-format: application/json
+
+    #Set the history TTL (Time to live) to 1 day (P1D in ISO 8601 format)
+    #Controls how long historic process instances and variables are kept before eligible form cleanup
+    #P1D- period of 1 Day
+    generic-properties:
+      properties:
+        history-time-to-live: P1D
+
+    auto-deployment-enabled: true
+
+
+
+#Useful form diagnosing issues during process execution
+logging:
+  level:
+    org.camunda.bpm.engine: info
+    org.camunda.bpm: info
+
+
+
+

@@ -1,84 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/"
-             xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/"
-             xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
-             xmlns:modeler="http://camunda.org/schema/modeler/1.0"
-             xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0"
-             xmlns:camunda="http://camunda.org/schema/1.0/dmn"
-             id="choose-transport-to-home-dnm-general"
-             name="DRD"
-             namespace="http://camunda.org/schema/1.0/dmn"
-             exporter="Camunda Modeler"
-             exporterVersion="5.22.0"
-             modeler:executionPlatform="Camunda Platform"
-             modeler:executionPlatformVersion="7.21.0">
-
-<decision id="choose-transport-to-home-dmn"
-          name="Choose transport to home dmn"
-          camunda:historyTimeToLive="7">
-
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:camunda="http://camunda.org/schema/1.0/dmn" id="choose-transport-to-home-dmn-general" name="Choose Transport to Home" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.22.0">
+  <decision id="choose-transport-to-home-dmn" name="Choose transport to home" camunda:historyTimeToLive="7">
     <decisionTable id="DecisionTable_1v74vwp">
       <input id="Input_1" label="Which way of going home?">
         <inputExpression id="InputExpression_1" typeRef="double" expressionLanguage="javascript">
-          <text>var money = moneyNumber(client.wallet.moneyCount);
+          <text>var money = Number(client.wallet.moneyCount)
 
-print("money in wallet as for now is: " + money);
+print("money in wallet as for now is :" +money);
 
 money;
 </text>
         </inputExpression>
       </input>
-
-      <output id="Output_1" label="Desired transport" name="transport" typeRef="string" biodi:width="230.9936981201172">
+      <output id="Output_1" label="Desired transport" name="transport" typeRef="string">
         <outputValues id="UnaryTests_16x3sm2">
           <text>"walking","cityBus","metro","taxi","rentCar"</text>
         </outputValues>
       </output>
-
       <rule id="DecisionRule_0zh7okb">
         <description>Client has no money :-)</description>
         <inputEntry id="UnaryTests_0rtw7ez">
-          <text>&lt;=10</text>
+          <text>&lt;= 10</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_09de0ib">
           <text>"walking"</text>
         </outputEntry>
       </rule>
-
       <rule id="DecisionRule_0zi2l7m">
         <description>Client is going home on the city bus</description>
         <inputEntry id="UnaryTests_16yntds">
-          <text>]10..20]</text>
+          <text>(10..20]</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_0yclm41">
           <text>"cityBus"</text>
         </outputEntry>
       </rule>
-
       <rule id="DecisionRule_0bpuzm2">
-        <description>Client is going home using the metrro</description>
+        <description>Client is going home using the metro</description>
         <inputEntry id="UnaryTests_1sfki25">
-          <text>]20..30]</text>
+          <text>(20..30]</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_0i04lih">
           <text>"metro"</text>
         </outputEntry>
       </rule>
-
       <rule id="DecisionRule_0o5adla">
         <description>Client is going home using taxi</description>
         <inputEntry id="UnaryTests_1pz9bvg">
-          <text>]30..40]</text>
+          <text>(30..40]</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_0js2rsq">
           <text>"taxi"</text>
         </outputEntry>
       </rule>
-
       <rule id="DecisionRule_1m22nno">
-        <description>Client is going home using a rental car </description>
+        <description>Client is going home using a rental car</description>
         <inputEntry id="UnaryTests_1o6iuxe">
-          <text>&gt;40</text>
+          <text>&gt; 40</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_19byh3a">
           <text>"rentCar"</text>
@@ -86,10 +64,9 @@ money;
       </rule>
     </decisionTable>
   </decision>
-
   <dmndi:DMNDI>
     <dmndi:DMNDiagram>
-      <dmndi:DMNShape dmnElementRef="choose-transport-to-home-dnm">
+      <dmndi:DMNShape dmnElementRef="choose-transport-to-home-dmn">
         <dc:Bounds height="80" width="180" x="460" y="270" />
       </dmndi:DMNShape>
     </dmndi:DMNDiagram>

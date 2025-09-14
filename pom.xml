@@ -139,6 +139,13 @@
           <scope>test</scope>
       </dependency>
 
+      <dependency>
+          <groupId>org.camunda.bpm.extension.mockito</groupId>
+          <artifactId>camunda-bpm-mockito</artifactId>
+          <version>5.16.0</version>
+          <scope>test</scope>
+      </dependency>
+
 <!--      Generate getters, setters etc using annotations.-->
 <!--      Reduce boilerplate  code in java-->
 <!--      Marked as 'provide' - not included in final JAR, only used during compilations.-->

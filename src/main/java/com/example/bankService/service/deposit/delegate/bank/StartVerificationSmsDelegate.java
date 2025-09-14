@@ -1,6 +1,5 @@
 package com.example.bankService.service.deposit.delegate.bank;
 
-import com.example.bankService.model.Client;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -28,8 +27,9 @@ public class StartVerificationSmsDelegate implements JavaDelegate {
 
         log.info("The StartVerificationSmsDelegate has started....");
 
-        var businessKey = delegateExecution.getBusinessKey();
-        //needs to investigate why the client here is null, hence why I hard coded Ria instead of getting here from execution
+//        var businessKey = delegateExecution.getBusinessKey();
+        var businessKey = delegateExecution.getProcessBusinessKey();
+        //need to investigate why the client here is null, hence why I hard coded Ria instead of getting here from execution
 //        var client = (Client) delegateExecution.getVariable("client");
         var client = RIA;
 
