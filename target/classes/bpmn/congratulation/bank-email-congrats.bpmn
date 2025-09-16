@@ -6,7 +6,7 @@
       <bpmn:outgoing>Flow_1e70ip7</bpmn:outgoing>
     </bpmn:scriptTask>
     <bpmn:sequenceFlow id="Flow_02h6eh7" sourceRef="SignalStartEmailCongratsId" targetRef="EmailDelayTimerId" />
-    <bpmn:sequenceFlow id="Flow_1e70ip7" sourceRef="ActivityCongratsEmailAfterwardsId" targetRef="Event_0c387xa" />
+    <bpmn:sequenceFlow id="Flow_1e70ip7" sourceRef="ActivityCongratsEmailAfterwardsId" targetRef="CongratsEndEvent" />
     <bpmn:startEvent id="SignalStartEmailCongratsId" name="Signal start email congrats">
       <bpmn:outgoing>Flow_02h6eh7</bpmn:outgoing>
       <bpmn:signalEventDefinition id="SignalEventDefinition_1p2ee2k" signalRef="Signal_076o3le" />
@@ -19,7 +19,7 @@
         <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT10S</bpmn:timeDuration>
       </bpmn:timerEventDefinition>
     </bpmn:intermediateCatchEvent>
-    <bpmn:endEvent id="Event_0c387xa" name="Email congrats end event">
+    <bpmn:endEvent id="CongratsEndEvent" name="Email congrats end event">
       <bpmn:incoming>Flow_1e70ip7</bpmn:incoming>
       <bpmn:terminateEventDefinition id="TerminateEventDefinition_0shpj8f" />
     </bpmn:endEvent>
@@ -55,7 +55,7 @@
           <dc:Bounds x="378" y="215" width="86" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0h985ij_di" bpmnElement="Event_0c387xa">
+      <bpmndi:BPMNShape id="Event_0h985ij_di" bpmnElement="CongratsEndEvent">
         <dc:Bounds x="812" y="172" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="794" y="215" width="73" height="27" />

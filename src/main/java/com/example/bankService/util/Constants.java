@@ -17,7 +17,7 @@ public class Constants {
 
 
     private static final Wallet DAKIE_WALLET = Wallet.builder()
-            .moneyCount(BigDecimal.valueOf(300.20))
+            .moneyCount(BigDecimal.valueOf(20.20))
             .build();
 
     private static final Wallet ROOZEY_WALLET = Wallet.builder()

@@ -1,1 +1,5 @@
 com\example\bankService\WorkflowTest.class
+com\example\bankService\util\AbstractTestBase.class
+com\example\bankService\goingHomeProcess\ChooseTransportToHomeTest.class
+com\example\bankService\it\DepositOpeningProcessIT.class
+com\example\bankService\service\deposit\bank\delegate\StartVerificationSmsDelegateTest.class

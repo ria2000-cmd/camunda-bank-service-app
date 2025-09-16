@@ -38,7 +38,7 @@
         <bpmn:flowNodeRef>ValidateCodeFromSmsId</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ErrorNoMoreSmsValidationAttempts</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>SendFailedVerificationSmsId</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Gateway_0nf9mn4</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>GatewayIsSmsCodeValidId</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>SendSuccessVerificationSmsId</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
@@ -69,11 +69,11 @@
       <bpmn:outgoing>Flow_1a722ak</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_1a722ak" sourceRef="ProvideSmsValidationCodeId" targetRef="ValidateCodeFromSmsId" />
-    <bpmn:sequenceFlow id="Flow_1biuorw" sourceRef="ValidateCodeFromSmsId" targetRef="Gateway_0nf9mn4" />
-    <bpmn:sequenceFlow id="Flow_0d7utu9" name="yes" sourceRef="Gateway_0nf9mn4" targetRef="SendSuccessVerificationSmsId">
+    <bpmn:sequenceFlow id="Flow_1biuorw" sourceRef="ValidateCodeFromSmsId" targetRef="GatewayIsSmsCodeValidId" />
+    <bpmn:sequenceFlow id="Flow_0d7utu9" name="yes" sourceRef="GatewayIsSmsCodeValidId" targetRef="SendSuccessVerificationSmsId">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isSmsCodeValid}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_0eal44h" name="no" sourceRef="Gateway_0nf9mn4" targetRef="PrepareAndSendVerificationSmsId" />
+    <bpmn:sequenceFlow id="Flow_0eal44h" name="no" sourceRef="GatewayIsSmsCodeValidId" targetRef="PrepareAndSendVerificationSmsId" />
     <bpmn:sequenceFlow id="Flow_0hwmdfh" sourceRef="ErrorNoMoreSmsValidationAttempts" targetRef="SendFailedVerificationSmsId" />
     <bpmn:serviceTask id="ValidateCodeFromSmsId" name="Validate code from sms" camunda:delegateExpression="${smsValidationDelegate}">
       <bpmn:incoming>Flow_1a722ak</bpmn:incoming>
@@ -87,7 +87,7 @@
       <bpmn:incoming>Flow_0hwmdfh</bpmn:incoming>
       <bpmn:messageEventDefinition id="MessageEventDefinition_1a0vgcq" camunda:delegateExpression="${sendFailedVerificationSmsDelegate}" />
     </bpmn:endEvent>
-    <bpmn:exclusiveGateway id="Gateway_0nf9mn4" default="Flow_0eal44h">
+    <bpmn:exclusiveGateway id="GatewayIsSmsCodeValidId" default="Flow_0eal44h">
       <bpmn:incoming>Flow_1biuorw</bpmn:incoming>
       <bpmn:outgoing>Flow_0d7utu9</bpmn:outgoing>
       <bpmn:outgoing>Flow_0eal44h</bpmn:outgoing>
@@ -144,7 +144,7 @@
           <dc:Bounds x="932" y="476" width="76" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_0nf9mn4_di" bpmnElement="Gateway_0nf9mn4" isMarkerVisible="true">
+      <bpmndi:BPMNShape id="Gateway_0nf9mn4_di" bpmnElement="GatewayIsSmsCodeValidId" isMarkerVisible="true">
         <dc:Bounds x="795" y="505" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0my75mn_di" bpmnElement="SendSuccessVerificationSmsId">

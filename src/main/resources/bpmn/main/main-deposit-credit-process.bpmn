@@ -86,22 +86,22 @@
         <bpmn:outgoing>Flow_19k2fqg</bpmn:outgoing>
         <bpmn:errorEventDefinition id="ErrorEventDefinition_0s5s0jr" errorRef="Error_0w23sbu" camunda:errorCodeVariable="CLIENT_IS_CRIMINAL_ERROR" />
       </bpmn:startEvent>
-      <bpmn:scriptTask id="Activity_1pktzui" name="Run out of the bank" scriptFormat="JavaScript" camunda:resource="script/run-out-of-the-bank.js">
+      <bpmn:scriptTask id="ActivityRunOutOfTheBankId" name="Run out of the bank" scriptFormat="JavaScript" camunda:resource="script/run-out-of-the-bank.js">
         <bpmn:incoming>Flow_19k2fqg</bpmn:incoming>
         <bpmn:outgoing>Flow_1utrfpw</bpmn:outgoing>
       </bpmn:scriptTask>
-      <bpmn:sequenceFlow id="Flow_19k2fqg" sourceRef="ClientIsCriminalStartErrorId" targetRef="Activity_1pktzui" />
+      <bpmn:sequenceFlow id="Flow_19k2fqg" sourceRef="ClientIsCriminalStartErrorId" targetRef="ActivityRunOutOfTheBankId" />
       <bpmn:endEvent id="ClientIsCriminalEndErrorId" name="Client is criminal end error">
         <bpmn:incoming>Flow_1utrfpw</bpmn:incoming>
       </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_1utrfpw" sourceRef="Activity_1pktzui" targetRef="ClientIsCriminalEndErrorId" />
+      <bpmn:sequenceFlow id="Flow_1utrfpw" sourceRef="ActivityRunOutOfTheBankId" targetRef="ClientIsCriminalEndErrorId" />
     </bpmn:subProcess>
     <bpmn:subProcess id="Activity_1d7h8ac" name="Go home after operation sudden interuption" triggeredByEvent="true">
-      <bpmn:startEvent id="Event_1dzoe5x" name="Event sudden operation interruption error start">
+      <bpmn:startEvent id="EventSuddenOperationInterruptionErrorStartId" name="Event sudden operation interruption error start">
         <bpmn:outgoing>Flow_10n37eq</bpmn:outgoing>
-        <bpmn:errorEventDefinition id="ErrorEventDefinition_0xfdcpo" errorRef="Error_0woyli4" camunda:errorCodeVariable="SUDDEN_OPERATION_INTERRUPTION_ERROR" />
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_0xfdcpo" errorRef="Error_0oj7x9w" camunda:errorCodeVariable="SUDDEN_OPERATION_INTERRUPTION_ERROR" />
       </bpmn:startEvent>
-      <bpmn:sequenceFlow id="Flow_10n37eq" sourceRef="Event_1dzoe5x" targetRef="RoadToHomeAfterExceptionId" />
+      <bpmn:sequenceFlow id="Flow_10n37eq" sourceRef="EventSuddenOperationInterruptionErrorStartId" targetRef="RoadToHomeAfterExceptionId" />
       <bpmn:callActivity id="RoadToHomeAfterExceptionId" name="RoadToHomeAfterException" calledElement="GoingHome">
         <bpmn:extensionElements>
           <camunda:in businessKey="#{execution.processBusinessKey}" />
@@ -119,9 +119,9 @@
     <bpmn:subProcess id="Activity_1trcdq2" name="Go home after operation sudden interuption when no more deposits" triggeredByEvent="true">
       <bpmn:startEvent id="Event_1xuu5t4" name="Event sudden operation interruption error when no more deposits start">
         <bpmn:outgoing>Flow_0kfk8v3</bpmn:outgoing>
-        <bpmn:errorEventDefinition id="ErrorEventDefinition_1nns1xm" errorRef="Error_0woyli4" camunda:errorCodeVariable="NO_MORE_DEPOST_TO_OPEN" />
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_1nns1xm" errorRef="Error_12p5exs" camunda:errorCodeVariable="NO_MORE_DEPOST_TO_OPEN" />
       </bpmn:startEvent>
-      <bpmn:callActivity id="Activity_0g6az7k" name="RoadToHomeAfterNoMoreDepositsException" calledElement="GoingHome">
+      <bpmn:callActivity id="ActivityRoadToHomeAfterNoMoreDeposits" name="RoadToHomeAfterNoMoreDepositsException" calledElement="GoingHome">
         <bpmn:extensionElements>
           <camunda:in businessKey="#{execution.processBusinessKey}" />
           <camunda:in variables="all" />
@@ -130,18 +130,18 @@
         <bpmn:incoming>Flow_0kfk8v3</bpmn:incoming>
         <bpmn:outgoing>Flow_06lf7js</bpmn:outgoing>
       </bpmn:callActivity>
-      <bpmn:endEvent id="Event_1lzutjd" name="EventSuddenOperationInteruptionErrorWhenNoMoreDepositsEnd">
+      <bpmn:endEvent id="EventSuddenOperationInteruptionErrorWhenNoMoreDepositsEndId" name="EventSuddenOperationInterruptionErrorWhenNoMoreDepositsEnd">
         <bpmn:incoming>Flow_06lf7js</bpmn:incoming>
       </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_0kfk8v3" sourceRef="Event_1xuu5t4" targetRef="Activity_0g6az7k" />
-      <bpmn:sequenceFlow id="Flow_06lf7js" sourceRef="Activity_0g6az7k" targetRef="Event_1lzutjd" />
+      <bpmn:sequenceFlow id="Flow_0kfk8v3" sourceRef="Event_1xuu5t4" targetRef="ActivityRoadToHomeAfterNoMoreDeposits" />
+      <bpmn:sequenceFlow id="Flow_06lf7js" sourceRef="ActivityRoadToHomeAfterNoMoreDeposits" targetRef="EventSuddenOperationInteruptionErrorWhenNoMoreDepositsEndId" />
     </bpmn:subProcess>
     <bpmn:subProcess id="Activity_1qq0kba" name="Go home after operation sudden interuption when not enough money" triggeredByEvent="true">
       <bpmn:startEvent id="EventNotEnoughMoneyErrorStartId" name="Event not enough money error start">
         <bpmn:outgoing>Flow_08gmm0c</bpmn:outgoing>
         <bpmn:errorEventDefinition id="ErrorEventDefinition_0z0asba" errorRef="Error_0woyli4" camunda:errorCodeVariable="NOT_ENOUGH_MONEY" />
       </bpmn:startEvent>
-      <bpmn:callActivity id="Activity_0h2by8f" name="RoadToHomeAfterNotEnoughMoneyException" calledElement="GoingHome">
+      <bpmn:callActivity id="RoadToHomeAfterNotEnoughMoneyExceptionCallActivityId" name="RoadToHomeAfterNotEnoughMoneyException" calledElement="GoingHome">
         <bpmn:extensionElements>
           <camunda:in businessKey="#{execution.processBusinessKey}" />
           <camunda:in variables="all" />
@@ -150,11 +150,11 @@
         <bpmn:incoming>Flow_08gmm0c</bpmn:incoming>
         <bpmn:outgoing>Flow_15a6645</bpmn:outgoing>
       </bpmn:callActivity>
-      <bpmn:endEvent id="Event_16lhcin" name="EventSuddenOperationInteruptionErrorWhenNotEnoughMoney">
+      <bpmn:endEvent id="EventSuddenOperationInterruptionErrorWhenNotEnoughMoneyId" name="EventSuddenOperationInteruptionErrorWhenNotEnoughMoney">
         <bpmn:incoming>Flow_15a6645</bpmn:incoming>
       </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_08gmm0c" sourceRef="EventNotEnoughMoneyErrorStartId" targetRef="Activity_0h2by8f" />
-      <bpmn:sequenceFlow id="Flow_15a6645" sourceRef="Activity_0h2by8f" targetRef="Event_16lhcin" />
+      <bpmn:sequenceFlow id="Flow_08gmm0c" sourceRef="EventNotEnoughMoneyErrorStartId" targetRef="RoadToHomeAfterNotEnoughMoneyExceptionCallActivityId" />
+      <bpmn:sequenceFlow id="Flow_15a6645" sourceRef="RoadToHomeAfterNotEnoughMoneyExceptionCallActivityId" targetRef="EventSuddenOperationInterruptionErrorWhenNotEnoughMoneyId" />
     </bpmn:subProcess>
     <bpmn:textAnnotation id="TextAnnotation_047h0h1">
       <bpmn:text>Camunda forms - Choose transport to the bank (walking or taxi ?)</bpmn:text>
@@ -183,6 +183,8 @@
   </bpmn:process>
   <bpmn:error id="Error_0w23sbu" name="CLIENT_IS_CRIMINAL_ERROR" errorCode="CLIENT_IS_CRIMINAL_ERROR" camunda:errorMessage="CLIENT_IS_CRIMINAL_ERROR" />
   <bpmn:error id="Error_0woyli4" name="NOT_ENOUGH_MONEY" errorCode="NOT_ENOUGH_MONEY" camunda:errorMessage="NOT_ENOUGH_MONEY" />
+  <bpmn:error id="Error_0oj7x9w" name="SUDDEN_OPERATION_INTERRUPTION_ERROR" errorCode="SUDDEN_OPERATION_INTERRUPTION_ERROR" camunda:errorMessage="SUDDEN_OPERATION_INTERRUPTION_ERROR" />
+  <bpmn:error id="Error_12p5exs" name="NO_MORE_DEPOST_TO_OPEN" errorCode="NO_MORE_DEPOST_TO_OPEN" camunda:errorMessage="NO_MORE_DEPOST_TO_OPEN" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="MainDepositCreditProcess">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
@@ -242,7 +244,7 @@
           <dc:Bounds x="1053" y="1165" width="81" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0ylf34q_di" bpmnElement="Activity_1pktzui" bioc:stroke="#5b176d" bioc:fill="#e1bee7" color:background-color="#e1bee7" color:border-color="#5b176d">
+      <bpmndi:BPMNShape id="Activity_0ylf34q_di" bpmnElement="ActivityRunOutOfTheBankId" bioc:stroke="#5b176d" bioc:fill="#e1bee7" color:background-color="#e1bee7" color:border-color="#5b176d">
         <dc:Bounds x="1250" y="1100" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
@@ -264,7 +266,7 @@
         <dc:Bounds x="1020" y="790" width="560" height="190" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1yae9to_di" bpmnElement="Event_1dzoe5x" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
+      <bpmndi:BPMNShape id="Event_1yae9to_di" bpmnElement="EventSuddenOperationInterruptionErrorStartId" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
         <dc:Bounds x="1082" y="852" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1062" y="895" width="82" height="53" />
@@ -298,11 +300,11 @@
           <dc:Bounds x="470" y="895" width="82" height="66" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_1ghshrf" bpmnElement="Activity_0g6az7k" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+      <bpmndi:BPMNShape id="BPMNShape_1ghshrf" bpmnElement="ActivityRoadToHomeAfterNoMoreDeposits" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
         <dc:Bounds x="650" y="830" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_1tlb1tc" bpmnElement="Event_1lzutjd">
+      <bpmndi:BPMNShape id="BPMNShape_1tlb1tc" bpmnElement="EventSuddenOperationInteruptionErrorWhenNoMoreDepositsEndId">
         <dc:Bounds x="872" y="852" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="847" y="895" width="89" height="53" />
@@ -326,11 +328,11 @@
           <dc:Bounds x="1671" y="895" width="87" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_16wfolp" bpmnElement="Activity_0h2by8f" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+      <bpmndi:BPMNShape id="BPMNShape_16wfolp" bpmnElement="RoadToHomeAfterNotEnoughMoneyExceptionCallActivityId" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
         <dc:Bounds x="1850" y="830" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_1wibjkd" bpmnElement="Event_16lhcin">
+      <bpmndi:BPMNShape id="BPMNShape_1wibjkd" bpmnElement="EventSuddenOperationInterruptionErrorWhenNotEnoughMoneyId">
         <dc:Bounds x="2072" y="852" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="2049" y="895" width="87" height="53" />

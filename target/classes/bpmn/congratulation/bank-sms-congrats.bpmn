@@ -6,10 +6,10 @@
       <bpmn:outgoing>Flow_1e70ip7</bpmn:outgoing>
     </bpmn:scriptTask>
     <bpmn:sequenceFlow id="Flow_02h6eh7" sourceRef="SignalStartSmsCongratsId" targetRef="SmsDelayTimerId" />
-    <bpmn:endEvent id="Event_0c387xa" name="Sms congrats end event">
+    <bpmn:endEvent id="SmsCongratsEndEventId" name="Sms congrats end event">
       <bpmn:incoming>Flow_1e70ip7</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_1e70ip7" sourceRef="ActivityCongratsSmsAfterwardsId" targetRef="Event_0c387xa" />
+    <bpmn:sequenceFlow id="Flow_1e70ip7" sourceRef="ActivityCongratsSmsAfterwardsId" targetRef="SmsCongratsEndEventId" />
     <bpmn:startEvent id="SignalStartSmsCongratsId" name="Signal start sms congrats">
       <bpmn:outgoing>Flow_02h6eh7</bpmn:outgoing>
       <bpmn:signalEventDefinition id="SignalEventDefinition_1p2ee2k" signalRef="Signal_076o3le" />
@@ -42,7 +42,7 @@
         <dc:Bounds x="570" y="150" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0c387xa_di" bpmnElement="Event_0c387xa">
+      <bpmndi:BPMNShape id="Event_0c387xa_di" bpmnElement="SmsCongratsEndEventId">
         <dc:Bounds x="812" y="172" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="787" y="215" width="89" height="27" />
